@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>closure</title>
+</head>
+<body>
+  <div id="wrapper">
+    <button data-cb="1">Add div</button>
+    <button data-cb="2">Add img</button>
+    <button data-cb="delete">clear</button>
+    <br />
+    <div id="appendDiv"></div>
+  </div>
+  <script>
+    (function () {
+      const appendDiv = document.getElementById("appendDiv");
+      document.getElementById("wrapper").addEventListener("click", append);
+
+      function append(e) {
+        const target = e.target || e.srcElement || event.srcElement;
+        const callbackFunction = callback[target.getAttribute("data-cb")];
+        appendDiv.appendChild(callbackFunction());
+      }
+
+      const callback = {
+        1: (function () {
+          const div = document.createElement("div");
+          div.innerHTML = "1번";
+
+          return function () {
+            return div.cloneNode(true);
+          }
+        }()),
+        2: (function () {
+          const img = document.createElement("img");
+          img.src = "http://www.google.co.kr/images/srpr/logo3w.png";
+
+          return function () {
+            return img.cloneNode(true);
+          }
+        }()),
+        delete: function () {
+          appendDiv.innerHTML = "";
+          
+          // return document.createTextNode("Cleared");
+        }
+      }
+    }());
+  </script>
+</body>
+</html>
